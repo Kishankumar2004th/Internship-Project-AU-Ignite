@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - AU Ignite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="Admin.css">
+  <style>
+    /* Updated CSS for vertical attendance layout */
+    .attendance-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+      max-width: 800px;
+    }
+
+    .attendance-item {
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-left: 4px solid #118ab2;
+      transition: all 0.3s ease;
+    }
+
+    .attendance-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .student-info-attendance {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .student-info-attendance strong {
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .student-info-attendance .student-email {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .radio-group label:hover {
+      color: #118ab2;
+    }
+
+    .radio-group input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+      accent-color: #118ab2;
+    }
+
+    /* Color coding for different attendance statuses */
+    .radio-group label:nth-child(1) {
+      color: #06d6a0;
+    }
+
+    .radio-group label:nth-child(2) {
+      color: #e63946;
+    }
+
+    .radio-group label:nth-child(3) {
+      color: #118ab2;
+    }
+
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+      .attendance-item {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .radio-group {
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="sidebar-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-user-shield"></i>
+        <span>Admin Portal</span>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-item active" data-page="overview">
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="menu-text">Overview</span>
+        </div>
+        <div class="menu-item" data-page="students">
+          <i class="fas fa-users"></i>
+          <span class="menu-text">Students</span>
+        </div>
+        <div class="menu-item" data-page="attendance">
+          <i class="fas fa-calendar-check"></i>
+          <span class="menu-text">Attendance</span>
+        </div>
+        <div class="menu-item" data-page="assignments">
+          <i class="fas fa-tasks"></i>
+          <span class="menu-text">Assignments</span>
+        </div>
+        <div class="menu-item" data-page="tests">
+          <i class="fas fa-clipboard-list"></i>
+          <span class="menu-text">Mock Tests</span>
+        </div>
+        <div class="menu-item" data-page="submissions">
+          <i class="fas fa-file-alt"></i>
+          <span class="menu-text">Submissions</span>
+        </div>
+        <div class="menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="menu-text">Logout</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1 id="pageTitle">Admin Dashboard - Overview</h1>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div id="userName" style="font-size: 1.1rem; font-weight: 600;">Administrator</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">System Admin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overview Page -->
+      <div class="page-content active" id="overview">
+        <div class="dashboard-cards">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Total Students</div>
+              <div class="card-icon">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+            <div class="card-value" id="totalStudents">0</div>
+            <div class="card-text">Registered students</div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Present Today</div>
+              <div class="card-icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+            </div>
+            <div class="card-value" id="presentToday">0</div>
+            <div class="card-text">Students present</div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Assignments</div>
+              <div class="card-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+            </div>
+            <div class="card-value" id="totalAssignments">0</div>
+            <div class="card-text">Active assignments</div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Mock Tests</div>
+              <div class="card-icon">
+                <i class="fas fa-clipboard-list"></i>
+              </div>
+            </div>
+            <div class="card-value" id="totalTests">0</div>
+            <div class="card-text">Available tests</div>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Recent Activity</h2>
+          </div>
+          <div id="recentActivity">
+            <p class="loading">Loading recent activities...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Students Page -->
+      <div class="page-content" id="students">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Student Management</h2>
+          </div>
+          <div class="student-list" id="studentsList">
+            <!-- Students will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Page -->
+      <div class="page-content" id="attendance">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Mark Daily Attendance</h2>
+            <div>
+              <input type="date" id="attendanceDate" class="btn" style="background: white; border: 2px solid #e9ecef;">
+              <button class="btn btn-success btn-sm" id="saveAttendance">Save Attendance</button>
+            </div>
+          </div>
+          <div class="success-message" id="attendanceSuccess">Attendance saved successfully!</div>
+          <div class="attendance-form">
+            <div class="attendance-grid" id="attendanceGrid">
+              <!-- Attendance grid will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Attendance History</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Present</th>
+                  <th>Absent</th>
+                  <th>On Leave</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceHistory">
+                <!-- Attendance history will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assignments Page -->
+      <div class="page-content" id="assignments">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Create Assignment</h2>
+          </div>
+          <div class="assignment-form">
+            <div class="form-group">
+              <label for="assignmentTitle">Assignment Title</label>
+              <input type="text" id="assignmentTitle" placeholder="Enter assignment title">
+            </div>
+            <div class="form-group">
+              <label for="assignmentSubject">Subject</label>
+              <select id="assignmentSubject">
+                <option value="">Select Subject</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="React">React</option>
+                <option value="Node.js">Node.js</option>
+                <option value="MongoDB">MongoDB</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="assignmentDescription">Description</label>
+              <textarea id="assignmentDescription" rows="4" placeholder="Enter assignment description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="assignmentDueDate">Due Date</label>
+              <input type="date" id="assignmentDueDate">
+            </div>
+            <button class="btn btn-primary" id="createAssignment">Create Assignment</button>
+          </div>
+          <div class="success-message" id="assignmentSuccess">Assignment created successfully!</div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Active Assignments</h2>
+          </div>
+          <div id="assignmentsList">
+            <!-- Assignments list will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock Tests Page -->
+      <div class="page-content" id="tests">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Create Mock Test</h2>
+          </div>
+          <div class="assignment-form">
+            <div class="form-group">
+              <label for="testTitle">Test Title</label>
+              <input type="text" id="testTitle" placeholder="Enter test title">
+            </div>
+            <div class="form-group">
+              <label for="testSubject">Subject</label>
+              <select id="testSubject">
+                <option value="">Select Subject</option>
+                <option value="HTML & CSS Fundamentals">HTML & CSS Fundamentals</option>
+                <option value="JavaScript Basics">JavaScript Basics</option>
+                <option value="React Components & Hooks">React Components & Hooks</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="Full Stack Development">Full Stack Development</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="testDescription">Description</label>
+              <textarea id="testDescription" rows="4" placeholder="Enter test description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="testDuration">Duration (minutes)</label>
+              <input type="number" id="testDuration" placeholder="Enter test duration" min="15" max="180">
+            </div>
+            <div class="form-group">
+              <label for="testQuestions">Number of Questions</label>
+              <input type="number" id="testQuestions" placeholder="Enter number of questions" min="5" max="50">
+            </div>
+            <button class="btn btn-primary" id="createTest">Create Mock Test</button>
+          </div>
+          <div class="success-message" id="testSuccess">Mock test created successfully!</div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Available Mock Tests</h2>
+          </div>
+          <div id="testsList">
+            <!-- Tests list will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Submissions Page -->
+      <div class="page-content" id="submissions">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Assignment Submissions</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Assignment</th>
+                  <th>Submitted</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="submissionsList">
+                <!-- Submissions will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="Admin.js"></script>
+</body>
+</html>

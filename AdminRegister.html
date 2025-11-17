@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration - AU Ignite</title>
+    <style>
+        /* Same styling as LoginRegister.css with admin-specific enhancements */
+        .ad1 {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 700px;
+            width: 500px;
+            border: 5px solid #667eea;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        #a1, #a2 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0016 0%, #2d1b69 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .a2 {
+            position: relative;
+            left: 10px;
+            margin: 5px;
+            padding: 20px 0;
+        }
+        
+        .a3 {
+            height: 55px;
+            width: 400px;
+            border-radius: 25px;
+            font-size: 18px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .a3:focus {
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transform: scale(1.02);
+        }
+        
+        #a3 {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #a3:hover {
+            background: linear-gradient(45deg, #ee5a52, #d63447);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(238, 90, 82, 0.4);
+        }
+        
+        .a4 {
+            margin: 20px;
+            margin-left: 50px;
+        }
+        
+        .a5 {
+            position: relative;
+            top: 15px;
+            left: 20px;
+        }
+        
+        .a5 p {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            padding-left: 80px;
+        }
+        
+        .a5 p a {
+            text-decoration: none;
+            color: #ffd166;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .a5 p a:hover {
+            color: #ffed4a;
+        }
+        
+        .a6 {
+            position: relative;
+            left: 150px;
+            margin-bottom: 10px;
+        }
+        
+        .a6 a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .a6 a:hover {
+            color: #ffd166;
+        }
+        
+        #a1 {
+            font-size: 42px;
+            margin: 0;
+            padding: 0;
+            color: #ffd166;
+            font-weight: 700;
+        }
+        
+        #a2 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(45deg, #ffd166, #ffed4a);
+            color: #2d1b69;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px auto;
+            display: inline-block;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .ad1 {
+                width: 90%;
+                max-width: 450px;
+                height: auto;
+                min-height: 650px;
+                top: 50px;
+            }
+            
+            .a3 {
+                width: 85%;
+                max-width: 350px;
+            }
+            
+            .a4 {
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ad1">
+        <div class="a2">
+            <h1 id="a1">Admin</h1>
+            <h2 id="a2">Registration</h2>
+            <div class="admin-badge">System Administrator</div>
+        </div>
+        <form id="adminRegisterForm">
+            <div class="a4"><input type="text" placeholder="  Full Name" class="a3" required></div>
+            <div class="a4"><input type="email" placeholder="  Email Address" class="a3" required></div>
+            <div class="a4"><input type="text" placeholder="  Admin Code" class="a3" required></div>
+            <div class="a4"><input type="password" placeholder="  Password" class="a3" required></div>
+            <div class="a4"><input type="password" placeholder="  Confirm Password" class="a3" required></div>
+            <div class="a4"><button class="a3" id="a3">Register as Admin</button></div>
+            <div class="a6"><a href="Login.html">Already have an account? Login</a></div>
+            <div class="a5"><p>Student Registration? <a href="Register.html">Click Here</a></p></div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('adminRegisterForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const inputs = document.querySelectorAll('#adminRegisterForm input');
+                const fullName = inputs[0].value.trim();
+                const email = inputs[1].value.trim();
+                const adminCode = inputs[2].value.trim();
+                const password = inputs[3].value;
+                const confirmPassword = inputs[4].value;
+                
+                // Validation
+                if (!fullName || !email || !adminCode || !password || !confirmPassword) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Verify admin code (you can customize this)
+                const validAdminCodes = ['ADMIN2024', 'AUIGNITE123', 'SUPERADMIN'];
+                if (!validAdminCodes.includes(adminCode)) {
+                    alert('Invalid admin code. Please contact system administrator.');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                if (password.length < 8) {
+                    alert('Password must be at least 8 characters long');
+                    return;
+                }
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                // Get existing users
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                // Check if email already exists
+                if (users.some(u => u.email === email)) {
+                    alert('Email already registered!');
+                    return;
+                }
+                
+                // Create new admin user
+                const newAdmin = {
+                    id: Date.now().toString(),
+                    name: fullName,
+                    email: email,
+                    password: password, // Note: In production, this should be hashed
+                    role: 'admin',
+                    adminCode: adminCode,
+                    registrationDate: new Date().toISOString().split('T')[0],
+                    // Admin-specific data
+                    permissions: ['manage_students', 'manage_attendance', 'create_assignments', 'create_tests', 'view_submissions'],
+                    department: 'Administration',
+                    status: 'active'
+                };
+                
+                users.push(newAdmin);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                alert('Admin registration successful! You can now login with admin privileges.');
+                window.location.href = 'Login.html';
+            });
+        });
+    </script>
+</body>
+</html>

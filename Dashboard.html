@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - AU Ignite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="User.css">
+  <!-- ==== ADDED: Dashboard-specific styles ==== -->
+  <style>
+    .assignment-form {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    .assignment-item {
+      background: white;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .assignment-meta {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      display: none;
+    }
+    .test-item {
+      background: white;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .test-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-submitted {
+      background: #d4edda;
+      color: #155724;
+    }
+    .test-description {
+      color: #666;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+  </style>
+  <!-- ==== END ADDED ==== -->
+</head>
+<body>
+  <button class="sidebar-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <!-- <i class="fas fa-user-graduate fa-2x"></i> -->
+        <i class="fas fa-graduation-cap fa-2x"></i>
+        <span>Student Portal</span>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-item active" data-page="profile">
+          <i class="fas fa-id-card"></i>
+          <span class="menu-text">Profile</span>
+        </div>
+        <div class="menu-item" data-page="assignments">
+          <i class="fas fa-tasks"></i>
+          <span class="menu-text">Assignments</span>
+        </div>
+        <div class="menu-item" data-page="attendance">
+          <i class="fas fa-calendar-check"></i>
+          <span class="menu-text">Attendance</span>
+        </div>
+        <div class="menu-item" data-page="mocktest">
+          <i class="fas fa-clipboard-check"></i>
+          <span class="menu-text">Mock Test</span>
+        </div>
+        <div class="menu-item" data-page="results">
+          <i class="fas fa-chart-line"></i>
+          <span class="menu-text">Results</span>
+        </div>
+        <div class="menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="menu-text">Logout</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1 id="pageTitle">Student - Profile</h1>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">S</div>
+          <div>
+            <div id="userName">Student</div>
+            <div style="color: gray; font-size: 0.9rem;">Student</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Page -->
+      <div class="page-content active" id="profile">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">My Profile</h2>
+          </div>
+          <div class="student-card">
+            <!-- <div class="student-avatar" id="profileAvatar">S</div> -->
+            <!-- <div class="student-avatar" id="profileAvatar">S</div> -->
+            <div class="student-info">
+              <h3 id="profileName">Student Name</h3>
+              <p>Full Stack Web Development</p>
+              <p>Roll No: Auto-assigned</p>
+              <p id="profileEmail">Email: student@example.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assignments -->
+      <div class="page-content" id="assignments">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Submit Assignment</h2>
+          </div>
+          
+          <div class="assignment-form">
+            <div class="form-group">
+              <label for="assignmentTitle">Assignment Title</label>
+              <input type="text" id="assignmentTitle" placeholder="Enter assignment title">
+            </div>
+            <div class="form-group">
+              <label for="assignmentContent">Assignment Content</label>
+              <textarea id="assignmentContent" rows="4" placeholder="Enter your assignment content or paste text here"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="assignmentFile">Upload File (Optional)</label>
+              <input type="file" id="assignmentFile" accept=".txt,.pdf,.doc,.docx">
+            </div>
+            <button class="btn btn-primary" id="submitAssignment">Submit Assignment</button>
+          </div>
+          
+          <div class="success-message" id="successMessage">
+            Assignment submitted successfully!
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">My Submitted Assignments</h2>
+          </div>
+          <div id="submittedAssignments">
+            <!-- Assignments will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance -->
+      <div class="page-content" id="attendance">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">My Attendance</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTable">
+                <!-- Attendance data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock Test -->
+      <div class="page-content" id="mocktest">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">Available Mock Tests</h2>
+          </div>
+          <div id="mockTestsList">
+            <!-- Mock tests will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="page-content" id="results">
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title">My Test Results</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Test Name</th>
+                  <th>Score</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="resultsTable">
+                <!-- Test results will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==== ADDED: Dashboard JavaScript functionality ==== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in
+      const currentUserId = localStorage.getItem('currentUserId');
+      if (!currentUserId) {
+        alert('Please login first');
+        window.location.href = 'Login.html';
+        return;
+      }
+
+      // Get current user data
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const currentUser = users.find(u => u.id === currentUserId);
+      
+      if (!currentUser) {
+        alert('User session expired. Please login again.');
+        localStorage.removeItem('currentUserId');
+        window.location.href = 'Login.html';
+        return;
+      }
+
+      // Initialize test data if it doesn't exist or update with new subjects
+      initializeTestData(currentUser);
+      initializeMockTests(currentUser);
+
+      // Load user data into interface
+      loadUserData(currentUser);
+      
+      // Menu navigation
+      const menuItems = document.querySelectorAll('.menu-item');
+      const pageContents = document.querySelectorAll('.page-content');
+      const pageTitle = document.getElementById('pageTitle');
+
+      menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+          if (this.id === 'logoutBtn') {
+            if (confirm('Are you sure you want to logout?')) {
+              localStorage.removeItem('currentUserId');
+              window.location.href = 'index.html';
+            }
+            return;
+          }
+
+          const targetPage = this.getAttribute('data-page');
+          menuItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+
+          pageContents.forEach(page => page.classList.remove('active'));
+          document.getElementById(targetPage).classList.add('active');
+
+          const pageName = this.querySelector('.menu-text').textContent;
+          pageTitle.textContent = `${currentUser.name} - ${pageName}`;
+        });
+      });
+
+      // Assignment submission
+      document.getElementById('submitAssignment').addEventListener('click', function() {
+        const title = document.getElementById('assignmentTitle').value.trim();
+        const content = document.getElementById('assignmentContent').value.trim();
+        const fileInput = document.getElementById('assignmentFile');
+        
+        if (!title || !content) {
+          alert('Please fill in title and content');
+          return;
+        }
+
+        const assignment = {
+          id: Date.now().toString(),
+          title: title,
+          content: content,
+          date: new Date().toLocaleDateString(),
+          file: fileInput.files.length > 0 ? fileInput.files[0].name : null
+        };
+
+        // Add to current user's assignments
+        currentUser.assignments.push(assignment);
+        
+        // Update users array and save to localStorage
+        const userIndex = users.findIndex(u => u.id === currentUserId);
+        users[userIndex] = currentUser;
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Show success message
+        const successMsg = document.getElementById('successMessage');
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+        }, 3000);
+
+        // Clear form
+        document.getElementById('assignmentTitle').value = '';
+        document.getElementById('assignmentContent').value = '';
+        document.getElementById('assignmentFile').value = '';
+
+        // Refresh assignments display
+        loadSubmittedAssignments(currentUser);
+      });
+
+      // Sidebar toggle (mobile)
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+      });
+    });
+
+    // Initialize mock tests data
+    function initializeMockTests(user) {
+      // Define available mock tests
+      const mockTests = [
+        {
+          id: 'test1',
+          title: 'HTML & CSS Fundamentals',
+          description: 'Test your knowledge of HTML structure, semantic elements, CSS styling, flexbox, and grid layouts.',
+          duration: '45 minutes',
+          questions: 25,
+          status: 'pending'
+        },
+        {
+          id: 'test2',
+          title: 'JavaScript Basics',
+          description: 'Assess your understanding of JavaScript variables, functions, DOM manipulation, and event handling.',
+          duration: '60 minutes',
+          questions: 30,
+          status: 'pending'
+        },
+        {
+          id: 'test3',
+          title: 'React Components & Hooks',
+          description: 'Evaluate your React skills including components, state management, hooks, and props.',
+          duration: '50 minutes',
+          questions: 20,
+          status: 'pending'
+        },
+        {
+          id: 'test4',
+          title: 'Backend Development',
+          description: 'Test your knowledge of Node.js, Express.js, APIs, and database integration.',
+          duration: '55 minutes',
+          questions: 25,
+          status: 'pending'
+        }
+      ];
+
+      // Initialize mockTests array if it doesn't exist
+      if (!user.mockTests) {
+        user.mockTests = mockTests;
+      }
+
+      // Save updated user data back to localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const userIndex = users.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+    }
+
+    function loadMockTests(user) {
+      const container = document.getElementById('mockTestsList');
+      
+      if (!user.mockTests || user.mockTests.length === 0) {
+        container.innerHTML = '<p>No mock tests available.</p>';
+        return;
+      }
+
+      container.innerHTML = user.mockTests.map(test => `
+        <div class="test-item">
+          <div class="test-header">
+            <h4 style="margin: 0; color: #333;">${test.title}</h4>
+            <span class="test-status ${test.status === 'submitted' ? 'status-submitted' : 'status-pending'}">
+              ${test.status === 'submitted' ? 'Submitted' : 'Pending'}
+            </span>
+          </div>
+          <div class="test-description">${test.description}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <div style="color: #666; font-size: 0.9rem;">
+              <i class="fas fa-clock"></i> ${test.duration} • 
+              <i class="fas fa-question-circle"></i> ${test.questions} questions
+            </div>
+            ${test.status === 'pending' ? 
+              `<button class="btn btn-primary" onclick="submitMockTest('${test.id}', '${user.id}')">Start Test</button>` : 
+              `<button class="btn" style="background: #6c757d; cursor: not-allowed;" disabled>Completed</button>`
+            }
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function submitMockTest(testId, userId) {
+      if (confirm('Are you sure you want to start this test? Once started, it will be marked as submitted.')) {
+        // Get current user data
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = users.findIndex(u => u.id === userId);
+        
+        if (userIndex !== -1) {
+          const user = users[userIndex];
+          
+          // Find and update the test status
+          const testIndex = user.mockTests.findIndex(t => t.id === testId);
+          if (testIndex !== -1) {
+            user.mockTests[testIndex].status = 'submitted';
+            user.mockTests[testIndex].submittedDate = new Date().toLocaleDateString();
+            
+            // Save updated data
+            users[userIndex] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Reload mock tests display
+            loadMockTests(user);
+            
+            alert('Mock test has been started and marked as submitted!');
+          }
+        }
+      }
+    }
+    function initializeTestData(user) {
+      // Define the new test subjects with sample scores and dates
+      const newTestData = [
+        { name: 'HTML', score: 92, date: '2024-09-10' },
+        { name: 'CSS', score: 88, date: '2024-09-12' },
+        { name: 'JavaScript', score: 85, date: '2024-09-14' },
+        { name: 'ReactJS', score: 90, date: '2024-09-16' },
+        { name: 'Node.js', score: 87, date: '2024-09-18' },
+        { name: 'MongoDB', score: 93, date: '2024-09-20' },
+        { name: 'Express.js', score: 89, date: '2024-09-22' }
+      ];
+
+      // Initialize tests array if it doesn't exist
+      if (!user.tests) {
+        user.tests = [];
+      }
+
+      // Update with new test data
+      user.tests = newTestData;
+
+      // Initialize other arrays if they don't exist
+      if (!user.assignments) {
+        user.assignments = [];
+      }
+      if (!user.attendance) {
+        user.attendance = [
+          { date: '2024-09-10', status: 'present' },
+          { date: '2024-09-11', status: 'present' },
+          { date: '2024-09-12', status: 'absent' },
+          { date: '2024-09-13', status: 'present' },
+          { date: '2024-09-14', status: 'present' }
+        ];
+      }
+
+      // Save updated user data back to localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const userIndex = users.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+    }
+
+    function loadUserData(user) {
+      // Update header and profile
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('profileName').textContent = user.name;
+      document.getElementById('profileEmail').textContent = `Email: ${user.email}`;
+      
+      // Set avatars to first letter of name
+      const firstLetter = user.name.charAt(0).toUpperCase();
+      document.getElementById('userAvatar').textContent = firstLetter;
+    //   document.getElementById('profileAvatar').textContent = firstLetter;
+      
+      // Update page title
+      document.getElementById('pageTitle').textContent = `${user.name} - Profile`;
+
+      // Load assignments, attendance, and results
+      loadSubmittedAssignments(user);
+      loadAttendance(user);
+      loadMockTests(user);
+      loadTestResults(user);
+    }
+
+    function loadSubmittedAssignments(user) {
+      const container = document.getElementById('submittedAssignments');
+      
+      if (user.assignments.length === 0) {
+        container.innerHTML = '<p>No assignments submitted yet.</p>';
+        return;
+      }
+
+      container.innerHTML = user.assignments.map(assignment => `
+        <div class="assignment-item">
+          <h4>${assignment.title}</h4>
+          <p>${assignment.content}</p>
+          <div class="assignment-meta">
+            Submitted: ${assignment.date}
+            ${assignment.file ? ` • File: ${assignment.file}` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadAttendance(user) {
+      const tbody = document.getElementById('attendanceTable');
+      
+      tbody.innerHTML = user.attendance.map(record => `
+        <tr>
+          <td>${record.date}</td>
+          <td>
+            <span class="badge ${record.status === 'present' ? 'badge-present' : 'badge-absent'}">
+              ${record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+    function loadTestResults(user) {
+      const tbody = document.getElementById('resultsTable');
+      
+      if (!user.tests || user.tests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3">No test results available.</td></tr>';
+        return;
+      }
+      const totalScore = user.tests.reduce((sum, test) => sum + test.score, 0);
+      const averageScore = totalScore / user.tests.length;
+      
+      let tableContent = user.tests.map(test => `
+        <tr>
+          <td>${test.name}</td>
+          <td>${test.score}</td>
+          <td>${test.date}</td>
+        </tr>
+      `).join('');
+      
+      tableContent += `
+        <tr style="font-weight: bold; border-top: 2px solid #ddd;">
+          <td>Average Score</td>
+          <td>${averageScore.toFixed(1)}</td>
+          <td>-</td>
+        </tr>
+      `;
+      tbody.innerHTML = tableContent;
+    }
+  </script>
+  <!-- ==== END ADDED ==== -->
+</body>
+</html>

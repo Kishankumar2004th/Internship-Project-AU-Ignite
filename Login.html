@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AU Ignite</title>
+    <style>
+        /* Enhanced Login Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0016 0%, #2d1b69 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .login-header {
+            text-align: center;
+            padding: 40px 30px 20px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffd166;
+        }
+
+        .login-header h2 {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .user-type-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 5px;
+            margin: 0 20px 20px;
+        }
+
+        .user-type-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-type-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .login-form {
+            padding: 0 40px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 15px;
+            padding: 0 20px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: #666;
+            font-weight: 400;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 55px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(45deg, #ee5a52, #d63447);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(238, 90, 82, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .form-links {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .form-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .form-links a:hover {
+            color: #ffd166;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+        .register-link a {
+            color: #ffd166;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #ffed4a;
+        }
+
+        .user-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 18px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #28a745;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 10px;
+            }
+
+            .login-header {
+                padding: 30px 20px 15px;
+            }
+
+            .login-header h1 {
+                font-size: 2rem;
+            }
+
+            .login-form {
+                padding: 0 30px 30px;
+            }
+
+            .user-type-selector {
+                margin: 0 10px 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome</h1>
+            <h2>Back to AU Ignite!</h2>
+            
+            <div class="user-type-selector">
+                <button class="user-type-btn active" data-type="student">
+                    <i class="fas fa-user-graduate"></i> Student
+                </button>
+                <button class="user-type-btn" data-type="admin">
+                    <i class="fas fa-user-shield"></i> Admin
+                </button>
+            </div>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+            
+            <div class="form-group">
+                <input type="email" class="form-input" id="emailInput" placeholder="Email Address" required>
+                <i class="fas fa-envelope user-icon"></i>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-input" id="passwordInput" placeholder="Password" required>
+                <i class="fas fa-lock user-icon"></i>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Login as <span id="loginType">Student</span>
+            </button>
+            
+            <div class="form-links">
+                <a href="#" onclick="alert('Feature coming soon!')">Forgot Password?</a>
+            </div>
+            
+            <div class="register-link">
+                <p>Don't have an account? 
+                    <a href="Register.html" id="registerLink">Register as Student</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const userTypeButtons = document.querySelectorAll('.user-type-btn');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginType = document.getElementById('loginType');
+            const registerLink = document.getElementById('registerLink');
+            const errorAlert = document.getElementById('errorAlert');
+            const successAlert = document.getElementById('successAlert');
+            
+            let currentUserType = 'student';
+            
+            // User type selector functionality
+            userTypeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    userTypeButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentUserType = this.getAttribute('data-type');
+                    
+                    // Update UI based on user type
+                    if (currentUserType === 'admin') {
+                        loginType.textContent = 'Admin';
+                        registerLink.textContent = 'Register as Admin';
+                        registerLink.href = '#';
+                        registerLink.onclick = () => window.location.href = 'AdminRegister.html';
+                    } else {
+                        loginType.textContent = 'Student';
+                        registerLink.textContent = 'Register as Student';
+                        registerLink.href = 'Register.html';
+                        registerLink.onclick = null;
+                    }
+                });
+            });
+            
+            // Show alert function
+            function showAlert(message, type = 'error') {
+                hideAlerts();
+                const alert = type === 'error' ? errorAlert : successAlert;
+                alert.textContent = message;
+                alert.style.display = 'block';
+                
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            }
+            
+            function hideAlerts() {
+                errorAlert.style.display = 'none';
+                successAlert.style.display = 'none';
+            }
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                // Basic validation
+                if (!email || !password) {
+                    showAlert('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showAlert('Please enter a valid email address', 'error');
+                    return;
+                }
+                
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                // Find user with matching credentials
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (!user) {
+                    showAlert('Invalid email or password', 'error');
+                    return;
+                }
+                
+                // Check user type authorization
+                if (currentUserType === 'admin') {
+                    // Check if user has admin role
+                    if (!user.role || user.role !== 'admin') {
+                        showAlert('Access denied. Admin privileges required.', 'error');
+                        return;
+                    }
+                    
+                    // Set admin session and redirect
+                    localStorage.setItem('currentUserId', user.id);
+                    showAlert('Admin login successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'AdminDashboard.html';
+                    }, 1500);
+                    
+                } else {
+                    // Student login
+                    if (user.role === 'admin') {
+                        showAlert('Please use Admin login for administrative accounts', 'error');
+                        return;
+                    }
+                    
+                    // Set student session and redirect
+                    localStorage.setItem('currentUserId', user.id);
+                    showAlert('Student login successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'Dashboard.html';
+                    }, 1500);
+                }
+            });
+            
+            // Auto-focus email input
+            emailInput.focus();
+            
+            // Handle enter key in password field
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
